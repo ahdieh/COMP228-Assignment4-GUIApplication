@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -84,7 +85,6 @@ public class CalculateGPA extends JFrame implements ActionListener {
 		this._addUIComponents();
 		
 		// Register event handler for Action Listeners
-		this._creditHourTextField.addActionListener(this);
 		
 		this._calculateBtn.addActionListener(this);
 		
@@ -116,7 +116,7 @@ public class CalculateGPA extends JFrame implements ActionListener {
 	}
 	
 	private void _addMessageLabel() {
-		this._messageLabel.setBounds(15, 518, 225, 29);
+		this._messageLabel.setBounds(15, 518, 367, 29);
 		this._contentPane.add(this._messageLabel);
 	}
 
@@ -125,10 +125,10 @@ public class CalculateGPA extends JFrame implements ActionListener {
 		// Use Absolute Layout
 		this._contentPane.setLayout(null);
 		
-		// Hello Label
+		// Message Label
 		this._messageLabel =new JLabel("New label");
-		_messageLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
-		_messageLabel.setBackground(new Color(255, 140, 0));
+		this._messageLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+		this._messageLabel.setBackground(new Color(255, 140, 0));
 		this._addMessageLabel();
 		
 		// Name Label
@@ -178,48 +178,52 @@ public class CalculateGPA extends JFrame implements ActionListener {
 		this._coursesComboBox.setBounds(488, 124, 64, 38);
 		this._contentPane.add(this._coursesComboBox);
 		
-		// Add ScrollPane to contain the todoJPanel
-		this._coursesScrollPane = new JScrollPane(this._coursesPanel);
-		this._coursesScrollPane.setBounds(123, 178, 419, 133);
-		this._coursesScrollPane.setPreferredSize(new Dimension(8, 8));
-		//this._todoScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		this._coursesScrollPane.setAutoscrolls(true);
-		
-		
-		
-		// Add a JPanel called todoPanel as a container for our dynamic components
-		this._coursesPanel = new JPanel();
-		this._coursesPanel.setBackground(new Color(154, 205, 50));
-		this._coursesPanel.setBounds(new Rectangle(0, 0, 0, 20));
-		
-		this._coursesScrollPane.setViewportView(this._coursesPanel);
-		
-		 //Define the GridBagLayout to be able to scroll our components
-		 this._gridBagLayout = new GridBagLayout();
-		
-		// Set the coursesPanel to gridBagLayout
-		this._coursesPanel.setLayout( this._gridBagLayout);
-		
-		this._contentPane.add(this._coursesScrollPane);
-		
-				
-		// Link the CoursesCodeTextField to the coursesPanel
-		this._coursesArrayList = new ArrayList<JTextField>();
-		
-		this._creditHourComboBox = new ArrayList<JComboBox<String>>();
-		
-		this._gradeComboBox = new ArrayList<JComboBox<String>>();
-		
-		this._messageLabel.setText("Your GPA is:");
-		
+		// image
 		this._imageLabel = new JLabel("");
 		this._imageLabel.setIcon(new ImageIcon("images\\CentennialCollege_Logo_RGB_horizontal.jpg"));
 		this._imageLabel.setBounds(0, 0, 143, 46);
 		this._contentPane.add(this._imageLabel);
 		
+		// Instruction Label
 		this._label = new JLabel("Enter the currentGPA and the credits you earned:");
 		this._label.setBounds(185, 27, 357, 20);
 		this._contentPane.add(this._label);
+		
+				
+		 		 
+		 // Add ScrollPane to contain the JPanel
+		 this._coursesScrollPane = new JScrollPane(this._coursesPanel);
+		 this._coursesScrollPane.setBounds(23, 178, 430, 133);
+		 this._coursesScrollPane.setPreferredSize(new Dimension(8, 8));
+		 this._coursesScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		 this._coursesScrollPane.setAutoscrolls(true);
+		
+		// Add a JPanel called todoPanel as a container for our dynamic components
+			this._coursesPanel = new JPanel();
+			this._coursesPanel.setBackground(new Color(154, 205, 50));
+			this._coursesPanel.setBounds(new Rectangle(0, 0, 0, 20));
+			
+			this._coursesScrollPane.setViewportView(this._coursesPanel);
+			
+			 //Define the GridBagLayout to be able to scroll our components
+			 this._gridBagLayout = new GridBagLayout();
+			
+			// Set the coursesPanel to gridBagLayout
+			this._coursesPanel.setLayout( this._gridBagLayout);
+			
+			this._contentPane.add(this._coursesScrollPane);
+			
+					
+			// Link the CoursesCodeTextField to the coursesPanel
+			this._coursesArrayList = new ArrayList<JTextField>();
+			
+			this._creditHourComboBox = new ArrayList<JComboBox<String>>();
+			
+			this._gradeComboBox = new ArrayList<JComboBox<String>>();
+			
+			this._messageLabel.setText("Your GPA is:");
+			
+			
 		
 	}
 
@@ -228,7 +232,19 @@ public class CalculateGPA extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		int numCourses = this._coursesComboBox.getSelectedIndex();
-				
+			
+		if(event.getSource() == this._currentGPATextField) {
+			if(Double.parseDouble(this._currentGPATextField.getText())> 4.5){
+				this._messageLabel.setText("The maximum of GPA should be 4.5");
+				this._currentGPATextField.selectAll();
+			}
+			
+			if(Double.parseDouble(this._currentGPATextField.getText())<0){
+				this._messageLabel.setText("GPA should be positive");
+				this._currentGPATextField.selectAll();
+			}
+		}
+		
 		if(event.getSource() == this._coursesComboBox) {
 			
 			
@@ -240,14 +256,19 @@ public class CalculateGPA extends JFrame implements ActionListener {
 			constraints.fill = GridBagConstraints.BOTH;
 			constraints.insets = new Insets(5, 5, 5, 5);
 			
+			
 
 			for(int col=0; col<4;col++){
 				constraints.gridx = col;
 
 			switch(col){
 			case 0:
+				constraints.gridy = 0;
+				JLabel NOLabel = new JLabel("No:");
+				NOLabel.setFont(new Font("Tahoma", Font.BOLD , 16));
+				this._coursesPanel.add(NOLabel,constraints);
 				for (int row=0; row<numCourses; row++){
-					constraints.gridy = row;
+					constraints.gridy = row+1;
 					JLabel numberLabel = new JLabel();
 					numberLabel.setText(Integer.toString(row+1));
 					numberLabel.setPreferredSize( new Dimension(20,25));
@@ -257,31 +278,39 @@ public class CalculateGPA extends JFrame implements ActionListener {
 
 			break;
 			case 1:
+				constraints.gridy = 0;
+				JLabel coursesLabel = new JLabel("Course Code:");
+				coursesLabel.setFont(new Font("Tahoma", Font.BOLD , 16));
+				this._coursesPanel.add(coursesLabel,constraints);
 				for (int row=0; row<numCourses; row++){
-					constraints.gridy = row;
+					constraints.gridy = row+1;
 					JTextField textField = new JTextField();
-					textField.setPreferredSize( new Dimension(100,25));
 					this._coursesArrayList.add(textField);
-					
 					this._coursesPanel.add(this._coursesArrayList.get(this._coursesArrayList.size()-1),constraints);
 				}
 				break;
 			case 2:
+				constraints.gridy = 0;
+				JLabel creditHourLabel = new JLabel("Credit Hours:");
+				creditHourLabel.setFont(new Font("Tahoma", Font.BOLD , 16));
+				this._coursesPanel.add(creditHourLabel,constraints);
 				for (int row=0; row<numCourses; row++){
-					constraints.gridy = row;
-					JComboBox<String> comboBox = new JComboBox<String>();
-					comboBox.setModel(new DefaultComboBoxModel<String>(this._creditHourList));
-					comboBox.setPreferredSize( new Dimension(15,25));
-					this._creditHourComboBox.add(comboBox);
+					constraints.gridy = row+1;
+					JComboBox<String> comboBox1 = new JComboBox<String>();
+					comboBox1.setModel(new DefaultComboBoxModel<String>(this._creditHourList));
+					this._creditHourComboBox.add(comboBox1);
 					this._coursesPanel.add(this._creditHourComboBox.get(this._creditHourComboBox.size()-1), constraints);
 				}
 				break;
 			case 3:
+				constraints.gridy = 0;
+				JLabel gradeLabel = new JLabel("Grade:             ");
+				gradeLabel.setFont(new Font("Tahoma", Font.BOLD , 16));
+				this._coursesPanel.add(gradeLabel,constraints);
 				for (int row=0; row<numCourses; row++){
-					constraints.gridy = row;
+					constraints.gridy = row+1;
 					JComboBox<String> comboBox = new JComboBox<String>();
 					comboBox.setModel(new DefaultComboBoxModel<String>(this._gradeList));
-					comboBox.setPreferredSize( new Dimension(60,25));
 					this._gradeComboBox.add(comboBox);
 					this._coursesPanel.add(this._gradeComboBox.get(this._gradeComboBox.size()-1), constraints);
 				}
@@ -290,7 +319,6 @@ public class CalculateGPA extends JFrame implements ActionListener {
 
 				
 			}
-			this._messageLabel.setText(numCourses + " Courses");
 			
 			constraints.gridy++;
 			constraints.weighty =1;
@@ -300,6 +328,19 @@ public class CalculateGPA extends JFrame implements ActionListener {
 				
 		}
 		if(event.getSource()==this._calculateBtn) {
+			
+			if(Double.parseDouble(this._currentGPATextField.getText())> 4.5){
+				this._messageLabel.setText("The maximum of Current GPA should be 4.5");
+				this._currentGPATextField.selectAll();
+				
+			}
+			
+			else if(Double.parseDouble(this._currentGPATextField.getText())<0){
+				this._messageLabel.setText("Current GPA should be positive");
+				this._currentGPATextField.selectAll();
+			}
+			else{
+			
 			double[] grade = new double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 			double qualityPoint = 0;
 			double credit =0;
@@ -316,16 +357,16 @@ public class CalculateGPA extends JFrame implements ActionListener {
 					
 					credit = credit + Double.valueOf((String)this._creditHourComboBox.get(i).getSelectedItem());
 					
-					GPA = qualityPoint / credit;
-					 c = qualityPoint + (Double.parseDouble(this._currentGPATextField.getText()));
-					 d = credit + Double.parseDouble(this._creditHourTextField.getText());
-					totalGPA =(double)(c/d);
-					 	
 				}
-				this._messageLabel.setText("Your GPA is: " + totalGPA);
+				GPA = qualityPoint / credit;
+				 c = qualityPoint + (Double.parseDouble(this._currentGPATextField.getText())* Double.parseDouble(this._creditHourTextField.getText()));
+				 d = credit + Double.parseDouble(this._creditHourTextField.getText());
+				totalGPA =(double)(c/d);
+				 DecimalFormat df = new DecimalFormat("#.00");
+				this._messageLabel.setText("Your GPA is: " + df.format(totalGPA));
 				
-				
-			}
+			}	
+		}
 	 
 	}
 }
