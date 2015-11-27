@@ -5,6 +5,7 @@ public class Program {
 
 		try {
 			CalculateGPA frame = new CalculateGPA();
+			frame.setTitle("Centennial College GPA Calculator");
 			frame.setVisible(true);
 			
 		} catch (Exception e) {
